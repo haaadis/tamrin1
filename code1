@@ -16,8 +16,8 @@ class Circle(shapes_2D):
     inp = ['radius']
     def __init__(self,list):
         self.r = list[0]
-        self.perimeter = '\u03C0(radius)\u00b2'
-        self.area = '\u03C0 * radius\u00b2'
+        self.perimeter = '2\u03C0(radius)'
+        self.area = '\u03C0(radius)\u00b2'
     def get_perimeter(self):
         return self.perimeter
     def Perimeter(self):
@@ -63,6 +63,7 @@ class Square(Rectangle):
         super().display()
 
 class Triangle(shapes_2D):
+    'with three sides'
     side=3
     inp = ['first side','second side','third side']
     def __init__(self,list):
@@ -99,7 +100,7 @@ class Equilateral_triangle(Triangle):
 
 class Regular_Pentagon(shapes_2D):
     side=1
-    inp = ['side']
+    inp=['side']
     def __init__(self,list):
         self.a = list[0]
         self.perimeter = '(side)x5'
@@ -117,7 +118,7 @@ class Regular_Pentagon(shapes_2D):
 
 class Regular_Hexagon(shapes_2D):
     side=1
-    inp = ['side']
+    inp=['side']
     def __init__(self,list):
         self.a = list[0]
         self.perimeter = '(side)x6'
@@ -133,27 +134,34 @@ class Regular_Hexagon(shapes_2D):
     def display(self):
         super().display()
 
-class shapes_3D:
+class shapes_3D(ABC):
     def get_volume(self):
+        pass
+    @abstractmethod
+    def volume(self):
         pass
     def get_area(self):
         pass
+    @abstractmethod
+    def Area(self):
+        pass
     def display(self):
         print(f'{self.__class__.__name__}:')
-        print(f'volume formula= {self.get_volume()}\n'
-              f'area formula= {self.get_area()}')
-        print(f'volume={self.Volume()}',f'area={self.Area()}')      
+        print(f'volume formula = {self.get_volume(self)}\n'
+              f'area formula = {self.get_area(self)}')
+        print(f'volume={self.volume(self)}',f'area={self.Area(self)}')         
 
 class Sphere(shapes_3D):
     side=1
     inp = ['radius']
     def __init__(self,list):
+        self.inp = ['radius']
         self.r = list[0]
         self.volume = '4/3 \u03C0r\u00b3'
         self.area = '4\u03C0r\u00b2'
     def get_volume(self):
         return self.volume
-    def Volume(self):
+    def volume(self):
         return (4*math.pi*self.r**3)/3
     def get_area(self):
         return self.area
@@ -173,7 +181,7 @@ class Cuboid(shapes_3D):
         self.area = '2h(l+b)'
     def get_volume(self):
         return self.volume
-    def Volume(self):
+    def volume(self):
         return self.l*self.b*self.h
     def get_area(self):
         return self.area
@@ -184,11 +192,12 @@ class Cuboid(shapes_3D):
     
 class Cube(Cuboid):
     side=1
-    inp = ['side'] 
+    inp = ['side']    
     def __init__(self,list):
         super().__init__([list[0],list[0],list[0]])
         self.volume = 'a\u00b3'
         self.area = '6a\u00b2'
+        self.inp = ['a']
     def get_volume(self):
         return self.volume
     def get_area(self):
@@ -198,7 +207,7 @@ class Cube(Cuboid):
         
 class Cylinder(shapes_3D):
     side=2
-    inp = ['radius','height']            
+    inp = ['radius','height']        
     def __init__(self,list):
         self.r = list[0]
         self.h = list[1]
@@ -206,7 +215,7 @@ class Cylinder(shapes_3D):
         self.area = '2\u03C0r(h+r)'
     def get_volume(self):
         return self.volume
-    def Volume(self):
+    def volume(self):
         return math.pi*(self.r**2)*self.h
     def get_area(self):
         return self.area
@@ -226,7 +235,7 @@ class Cone(shapes_3D):
         self.area = '\u03C0r(l+r)'
     def get_volume(self):
         return self.volume
-    def Volume(self):
+    def volume(self):
         return math.pi*self.h*(self.r**2)/3
     def get_area(self):
         return self.area
@@ -234,7 +243,7 @@ class Cone(shapes_3D):
         return math.pi*self.r*(self.l+self.r)
     def display(self):
         super().display()
-
+    
 class Triangular_Prism(shapes_3D):
     side=3
     inp = ['base','height of thebase triangle','height of the prism']
@@ -246,15 +255,15 @@ class Triangular_Prism(shapes_3D):
         self.area = '2( Area of the base) + ( Perimeter of the base x height of the prism)'
     def get_volume(self):
         return self.volume
-    def Volume(self):
+    def volume(self):
         return self.b*self.h*self.H/2
     def get_area(self):
         return self.area
     def Area(self):
         return self.h*self.b+(3*self.b*self.H)
     def display(self):
-        super().display()    
-        
+        super().display()
+      
 dimension = int(input('enter 2 for 2_D and 3 for 3_D:')) 
        
 if dimension==2:
@@ -266,14 +275,15 @@ if dimension==2:
           'Equilateraltriangle': Equilateral_triangle,
           'Regularpentagon':Regular_Pentagon,
           'Regularhexagon':Regular_Hexagon
-        }
+          }
+       
 
     shape_type = input("What type of 2_D shape?").capitalize()
     try:
           shape = shapes[shape_type]
           list=[]
-          for i in range(shape.side):
-              l=eval(input('enter length of {}:'.format(i for i in shape.inp)))
+          for j in shape.inp:
+              l=eval(input('enter length of {}:'.format(j)))
               list.append(l)
           wanted = shape(list).display()
     except KeyError:
@@ -292,12 +302,13 @@ elif dimension==3:
     try:
           shape = shapes[shape_type]
           list=[]
-          for i in range(shape.side):
-              l=eval(input('enter length of {}:'.format(i for i in shape.inp)))
+          for j in shape.inp:
+              l=eval(input('enter length of {}:'.format(j)))
               list.append(l)
           wanted = shape(list).display()
     except KeyError:
           print("That's not a possible type of shape.")
 
+
     
-    
+   
